@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+
+group = 'com.kylian.alzheimer'
+version = '1.0.0'
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(23)
+}
+
+neoForge {
+    version = '21.1.233'
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        alzheimervillagers {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ModDevGradle handles the neoforge dependency automatically using neoForge.version
+}

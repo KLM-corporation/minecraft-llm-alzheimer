@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="alzheimervillagers"
+version="1.0.0"
+displayName="Alzheimer Villagers"
+description="Connects Minecraft villagers to a local LLM with sliding window memory and price penalty mechanics."
+authors="Kylian"
+
+[[dependencies.alzheimervillagers]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.alzheimervillagers]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
