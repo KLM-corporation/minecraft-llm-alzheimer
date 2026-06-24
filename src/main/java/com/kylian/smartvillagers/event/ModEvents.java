@@ -135,9 +135,9 @@ public class ModEvents {
 
                 // Cognitive memory limit prompt injection
                 if (chatData.getConfusionTurns() > 0) {
-                    systemPrompt.append(" IMPORTANT LORE DIRECTION: You recently had so many thoughts and ideas that some older details of this conversation slipped your mind. ")
-                            .append("You still remember who you are, but you feel slightly distracted or overwhelmed by all this information. ")
-                            .append("Mention this overload or brief distraction naturally in your response.");
+                    systemPrompt.append(" IMPORTANT LORE DIRECTION: You suffer from minor memory disorders and just experienced a sudden memory lapse. ")
+                            .append("You still remember who you are, but you feel slightly confused or disoriented about what was just said previously. ")
+                            .append("Mention your confusion, disorientation, or this memory lapse naturally in your response.");
                 }
 
                 String url = ModConfig.INSTANCE.llmUrl.get();
@@ -175,7 +175,7 @@ public class ModEvents {
 
                                 // If memory was wiped due to sliding window, let player know
                                 if (chatData.hasForgotThisTurn()) {
-                                    player.sendSystemMessage(Component.literal("§d[Lore] " + villager.getName().getString() + " seems to lose focus for a second. Having too many thoughts, they forgot older parts of your talk..."));
+                                    player.sendSystemMessage(Component.literal("§d[Lore] " + villager.getName().getString() + " looks blankly at you. They seem to have had a memory lapse and forgotten older parts of your talk..."));
                                 }
 
                                 // Output villager response
