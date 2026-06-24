@@ -161,6 +161,7 @@ public class ModEvents {
                                 processedResponse = processedResponse.replace("[NEUTRAL]", "").trim();
 
                                 chatData.setAnnoyance(annoyance);
+                                int finalAnnoyance = chatData.getAnnoyance();
 
                                 // Add turns to history (which triggers sliding window check inside data structure)
                                 chatData.addMessage(rawText, processedResponse);
@@ -175,7 +176,7 @@ public class ModEvents {
                                 player.displayClientMessage(Component.literal(""), true); // Clear action bar
 
                                 // Update prices based on new annoyance
-                                updateVillagerTrades(villager, annoyance);
+                                updateVillagerTrades(villager, finalAnnoyance);
 
                                 // Save updated attachment back to entity
                                 villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
@@ -198,14 +199,15 @@ public class ModEvents {
             VillagerChatData chatData = villager.getData(AlzheimerVillagersMod.VILLAGER_CHAT);
             int newAnnoyance = chatData.getAnnoyance() + 40;
             chatData.setAnnoyance(newAnnoyance);
+            int finalAnnoyance = chatData.getAnnoyance();
 
             // Add hostile context to LLM memory
             chatData.addMessage("System Alert", "Player attacked you!");
 
-            updateVillagerTrades(villager, newAnnoyance);
+            updateVillagerTrades(villager, finalAnnoyance);
             villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
 
-            player.sendSystemMessage(Component.literal("§c<" + villager.getName().getString() + "> Aïe ! Pourquoi m'as-tu frappé ?! (Annoyance: " + newAnnoyance + "/100)"));
+            player.sendSystemMessage(Component.literal("§c<" + villager.getName().getString() + "> Aïe ! Pourquoi m'as-tu frappé ?! (Annoyance: " + finalAnnoyance + "/100)"));
         }
     }
 
