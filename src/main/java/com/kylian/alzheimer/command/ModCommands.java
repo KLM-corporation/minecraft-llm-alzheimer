@@ -24,6 +24,7 @@ public class ModCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("alzheimer")
                 .requires(source -> source.hasPermission(2)) // Level 2 is standard for OP/Admin
+                .then(Commands.literal("help").executes(ModCommands::showHelp))
                 .then(Commands.literal("config")
                         .then(Commands.literal("get").executes(ModCommands::getConfig))
                         .then(Commands.literal("set")
@@ -48,6 +49,20 @@ public class ModCommands {
                                         .executes(ModCommands::setVillagerAnnoyance)))
                 )
         );
+    }
+
+    private static int showHelp(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        source.sendSuccess(() -> Component.literal("§a[Alzheimer Help] Commandes disponibles :"), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer help §7- Affiche ce message d'aide."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer config get §7- Affiche les configurations de LLM actuelles."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer config set llmUrl <url> §7- Modifie l'adresse de l'API LLM."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer config set modelName <model> §7- Modifie le nom du modèle LLM."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer config set maxHistorySize <2-50> §7- Définit le nombre de messages mémorisés."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer config set pricePenaltyFactor <0.0-5.0> §7- Définit le coefficient de hausse des prix."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer villager clear_memory §7- Efface la mémoire et l'agacement du villageois actif."), false);
+        source.sendSuccess(() -> Component.literal("§e/alzheimer villager set_annoyance <0-100> §7- Modifie l'agacement du villageois actif et met à jour ses prix."), false);
+        return 1;
     }
 
     private static int getConfig(CommandContext<CommandSourceStack> context) {
