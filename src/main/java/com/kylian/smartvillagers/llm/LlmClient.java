@@ -1,9 +1,9 @@
-package com.kylian.alzheimer.llm;
+package com.kylian.smartvillagers.llm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.kylian.alzheimer.data.ChatMessage;
+import com.kylian.smartvillagers.data.ChatMessage;
 
 import java.net.URI;
 import java.net.http.HttpClient;

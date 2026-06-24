@@ -1,4 +1,4 @@
-package com.kylian.alzheimer.config;
+package com.kylian.smartvillagers.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;

@@ -1,14 +1,14 @@
-package com.kylian.alzheimer.command;
+package com.kylian.smartvillagers.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.kylian.alzheimer.AlzheimerVillagersMod;
-import com.kylian.alzheimer.config.ModConfig;
-import com.kylian.alzheimer.data.VillagerChatData;
-import com.kylian.alzheimer.manager.ChatSessionManager;
+import com.kylian.smartvillagers.SmartVillagersMod;
+import com.kylian.smartvillagers.config.ModConfig;
+import com.kylian.smartvillagers.data.VillagerChatData;
+import com.kylian.smartvillagers.manager.ChatSessionManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ModCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("alzheimer")
+        var commandNode = Commands.literal("smartvillager")
                 .requires(source -> source.hasPermission(2)) // Level 2 is standard for OP/Admin
                 .then(Commands.literal("help").executes(ModCommands::showHelp))
                 .then(Commands.literal("config")
@@ -47,27 +47,34 @@ public class ModCommands {
                         .then(Commands.literal("set_annoyance")
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(0, 100))
                                         .executes(ModCommands::setVillagerAnnoyance)))
-                )
+                );
+
+        var buildNode = dispatcher.register(commandNode);
+
+        // Register alias /sv redirecting to /smartvillager
+        dispatcher.register(Commands.literal("sv")
+                .requires(source -> source.hasPermission(2))
+                .redirect(buildNode)
         );
     }
 
     private static int showHelp(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(() -> Component.literal("§a[Alzheimer Help] Commandes disponibles :"), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer help §7- Affiche ce message d'aide."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer config get §7- Affiche les configurations de LLM actuelles."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer config set llmUrl <url> §7- Modifie l'adresse de l'API LLM."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer config set modelName <model> §7- Modifie le nom du modèle LLM."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer config set maxHistorySize <2-50> §7- Définit le nombre de messages mémorisés."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer config set pricePenaltyFactor <0.0-5.0> §7- Définit le coefficient de hausse des prix."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer villager clear_memory §7- Efface la mémoire et l'agacement du villageois actif."), false);
-        source.sendSuccess(() -> Component.literal("§e/alzheimer villager set_annoyance <0-100> §7- Modifie l'agacement du villageois actif et met à jour ses prix."), false);
+        source.sendSuccess(() -> Component.literal("§a[Smart Villagers Help] Commandes disponibles (alias /sv) :"), false);
+        source.sendSuccess(() -> Component.literal("§e/sv help §7- Affiche ce message d'aide."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv config get §7- Affiche les configurations de LLM actuelles."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv config set llmUrl <url> §7- Modifie l'adresse de l'API LLM."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv config set modelName <model> §7- Modifie le nom du modèle LLM."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv config set maxHistorySize <2-50> §7- Définit le nombre de messages mémorisés."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv config set pricePenaltyFactor <0.0-5.0> §7- Définit le coefficient de hausse des prix."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv villager clear_memory §7- Efface la mémoire et l'agacement du villageois actif."), false);
+        source.sendSuccess(() -> Component.literal("§e/sv villager set_annoyance <0-100> §7- Modifie l'agacement du villageois actif et met à jour ses prix."), false);
         return 1;
     }
 
     private static int getConfig(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(() -> Component.literal("§a[Alzheimer Config]"), false);
+        source.sendSuccess(() -> Component.literal("§a[Smart Villagers Config]"), false);
         source.sendSuccess(() -> Component.literal("§eLLM URL: §f" + ModConfig.INSTANCE.llmUrl.get()), false);
         source.sendSuccess(() -> Component.literal("§eModel: §f" + ModConfig.INSTANCE.modelName.get()), false);
         source.sendSuccess(() -> Component.literal("§eMax History: §f" + ModConfig.INSTANCE.maxHistorySize.get()), false);
@@ -109,11 +116,11 @@ public class ModCommands {
 
         Villager villager = getActiveVillager(player);
         if (villager != null) {
-            VillagerChatData chatData = villager.getData(AlzheimerVillagersMod.VILLAGER_CHAT);
+            VillagerChatData chatData = villager.getData(SmartVillagersMod.VILLAGER_CHAT);
             chatData.clearHistory();
             chatData.setAnnoyance(0);
             updateVillagerTrades(villager, 0); // Reset prices
-            villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
+            villager.setData(SmartVillagersMod.VILLAGER_CHAT, chatData);
 
             player.sendSystemMessage(Component.literal("§a[System] " + villager.getName().getString() + "'s memory and annoyance have been fully cleared."));
             return 1;
@@ -131,12 +138,12 @@ public class ModCommands {
         Villager villager = getActiveVillager(player);
 
         if (villager != null) {
-            VillagerChatData chatData = villager.getData(AlzheimerVillagersMod.VILLAGER_CHAT);
+            VillagerChatData chatData = villager.getData(SmartVillagersMod.VILLAGER_CHAT);
             chatData.setAnnoyance(amount);
             int finalAnnoyance = chatData.getAnnoyance();
 
             updateVillagerTrades(villager, finalAnnoyance);
-            villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
+            villager.setData(SmartVillagersMod.VILLAGER_CHAT, chatData);
 
             player.sendSystemMessage(Component.literal("§a[System] " + villager.getName().getString() + "'s annoyance set to " + finalAnnoyance + ". Prices updated."));
             return 1;

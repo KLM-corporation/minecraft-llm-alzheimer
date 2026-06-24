@@ -1,8 +1,8 @@
-package com.kylian.alzheimer.data;
+package com.kylian.smartvillagers.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.kylian.alzheimer.config.ModConfig;
+import com.kylian.smartvillagers.config.ModConfig;
 
 import java.util.ArrayList;
 import java.util.List;

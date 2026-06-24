@@ -1,8 +1,8 @@
-package com.kylian.alzheimer;
+package com.kylian.smartvillagers;
 
-import com.kylian.alzheimer.config.ModConfig;
-import com.kylian.alzheimer.data.VillagerChatData;
-import com.kylian.alzheimer.event.ModEvents;
+import com.kylian.smartvillagers.config.ModConfig;
+import com.kylian.smartvillagers.data.VillagerChatData;
+import com.kylian.smartvillagers.event.ModEvents;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -13,9 +13,9 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 
-@Mod(AlzheimerVillagersMod.MOD_ID)
-public class AlzheimerVillagersMod {
-    public static final String MOD_ID = "alzheimervillagers";
+@Mod(SmartVillagersMod.MOD_ID)
+public class SmartVillagersMod {
+    public static final String MOD_ID = "smartvillagers";
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
@@ -26,7 +26,7 @@ public class AlzheimerVillagersMod {
                             .serialize(VillagerChatData.CODEC)
                             .build());
 
-    public AlzheimerVillagersMod(IEventBus modEventBus, ModContainer container) {
+    public SmartVillagersMod(IEventBus modEventBus, ModContainer container) {
         // Register config
         container.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
 

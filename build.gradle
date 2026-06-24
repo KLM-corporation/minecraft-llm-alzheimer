@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.141'
 }
 
-group = 'com.kylian.alzheimer'
+group = 'com.kylian.smartvillagers'
 version = '1.0.0'
 
 java {
@@ -23,7 +23,7 @@ neoForge {
     }
 
     mods {
-        alzheimervillagers {
+        smartvillagers {
             sourceSet sourceSets.main
         }
     }

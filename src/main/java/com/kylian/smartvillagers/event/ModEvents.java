@@ -1,11 +1,11 @@
-package com.kylian.alzheimer.event;
+package com.kylian.smartvillagers.event;
 
-import com.kylian.alzheimer.AlzheimerVillagersMod;
-import com.kylian.alzheimer.config.ModConfig;
-import com.kylian.alzheimer.data.VillagerChatData;
-import com.kylian.alzheimer.llm.LlmClient;
-import com.kylian.alzheimer.command.ModCommands;
-import com.kylian.alzheimer.manager.ChatSessionManager;
+import com.kylian.smartvillagers.SmartVillagersMod;
+import com.kylian.smartvillagers.config.ModConfig;
+import com.kylian.smartvillagers.data.VillagerChatData;
+import com.kylian.smartvillagers.llm.LlmClient;
+import com.kylian.smartvillagers.command.ModCommands;
+import com.kylian.smartvillagers.manager.ChatSessionManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -102,7 +102,7 @@ public class ModEvents {
                 // Show processing indicator
                 player.displayClientMessage(Component.literal("§e" + villager.getName().getString() + " is thinking..."), true);
 
-                VillagerChatData chatData = villager.getData(AlzheimerVillagersMod.VILLAGER_CHAT);
+                VillagerChatData chatData = villager.getData(SmartVillagersMod.VILLAGER_CHAT);
                 String professionName = BuiltInRegistries.VILLAGER_PROFESSION.getKey(villager.getVillagerData().getProfession()).getPath();
 
                 // Build System Prompt
@@ -133,11 +133,11 @@ public class ModEvents {
                     }
                 }
 
-                // Alzheimer prompt injection
+                // Cognitive memory limit prompt injection
                 if (chatData.getConfusionTurns() > 0) {
-                    systemPrompt.append(" IMPORTANT LORE DIRECTION: You recently suffered a sudden memory lapse (Alzheimer scenario). ")
-                            .append("You feel slightly confused or disoriented about what was just said previously, though you still remember who you are. ")
-                            .append("Mention your confusion, disorientation, or a slight headache naturally in your response.");
+                    systemPrompt.append(" IMPORTANT LORE DIRECTION: You recently had so many thoughts and ideas that some older details of this conversation slipped your mind. ")
+                            .append("You still remember who you are, but you feel slightly distracted or overwhelmed by all this information. ")
+                            .append("Mention this overload or brief distraction naturally in your response.");
                 }
 
                 String url = ModConfig.INSTANCE.llmUrl.get();
@@ -175,7 +175,7 @@ public class ModEvents {
 
                                 // If memory was wiped due to sliding window, let player know
                                 if (chatData.hasForgotThisTurn()) {
-                                    player.sendSystemMessage(Component.literal("§d[Lore] " + villager.getName().getString() + " looks blankly at you. They seem to have forgotten older parts of your talk..."));
+                                    player.sendSystemMessage(Component.literal("§d[Lore] " + villager.getName().getString() + " seems to lose focus for a second. Having too many thoughts, they forgot older parts of your talk..."));
                                 }
 
                                 // Output villager response
@@ -186,7 +186,7 @@ public class ModEvents {
                                 updateVillagerTrades(villager, finalAnnoyance);
 
                                 // Save updated attachment back to entity
-                                villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
+                                villager.setData(SmartVillagersMod.VILLAGER_CHAT, chatData);
                             });
                         }, player.server);
             } else {
@@ -203,7 +203,7 @@ public class ModEvents {
 
         // Check if attacker is a player
         if (event.getSource().getEntity() instanceof ServerPlayer player) {
-            VillagerChatData chatData = villager.getData(AlzheimerVillagersMod.VILLAGER_CHAT);
+            VillagerChatData chatData = villager.getData(SmartVillagersMod.VILLAGER_CHAT);
             int newAnnoyance = chatData.getAnnoyance() + 40;
             chatData.setAnnoyance(newAnnoyance);
             int finalAnnoyance = chatData.getAnnoyance();
@@ -212,7 +212,7 @@ public class ModEvents {
             chatData.addMessage("System Alert", "Player attacked you!");
 
             updateVillagerTrades(villager, finalAnnoyance);
-            villager.setData(AlzheimerVillagersMod.VILLAGER_CHAT, chatData);
+            villager.setData(SmartVillagersMod.VILLAGER_CHAT, chatData);
 
             player.sendSystemMessage(Component.literal("§c<" + villager.getName().getString() + "> Aïe ! Pourquoi m'as-tu frappé ?! (Annoyance: " + finalAnnoyance + "/100)"));
         }

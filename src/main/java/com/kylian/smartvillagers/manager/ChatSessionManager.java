@@ -1,4 +1,4 @@
-package com.kylian.alzheimer.manager;
+package com.kylian.smartvillagers.manager;
 
 import java.util.Map;
 import java.util.UUID;
