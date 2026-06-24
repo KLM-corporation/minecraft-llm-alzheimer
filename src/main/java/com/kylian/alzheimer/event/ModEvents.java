@@ -4,6 +4,7 @@ import com.kylian.alzheimer.AlzheimerVillagersMod;
 import com.kylian.alzheimer.config.ModConfig;
 import com.kylian.alzheimer.data.VillagerChatData;
 import com.kylian.alzheimer.llm.LlmClient;
+import com.kylian.alzheimer.command.ModCommands;
 import com.kylian.alzheimer.manager.ChatSessionManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,11 @@ import java.util.UUID;
 
 public class ModEvents {
     private int tickCounter = 0;
+
+    @SubscribeEvent
+    public void onCommandsRegister(RegisterCommandsEvent event) {
+        ModCommands.register(event.getDispatcher());
+    }
 
     @SubscribeEvent
     public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
